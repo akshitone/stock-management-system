@@ -1,0 +1,126 @@
+import { BaseEntity } from "./common";
+export interface YarnStock extends BaseEntity {
+    yarnVoucherID: string;
+    yarnVoucherNumber: string;
+    lotNumber: string;
+    qualityID: string;
+    qualityName: string;
+    qualityCode: string;
+    supplierID: string;
+    supplierName: string;
+    khataID: string;
+    khataName: string;
+    khataCode: string;
+    locationID: string;
+    locationName: string;
+    locationCode: string;
+    totalCartoons: number;
+    availableCartoons: number;
+    usedCartoons: number;
+    transferredCartoons: number;
+    totalWeight: number;
+    availableWeight: number;
+    usedWeight: number;
+    totalCops: number;
+    availableCops: number;
+    totalRolls: number;
+    availableRolls: number;
+    isExhausted: boolean;
+}
+export interface GreyStock extends BaseEntity {
+    greyProductionID: string;
+    beamID: string;
+    beamNumber: string;
+    qualityID: string;
+    qualityName: string;
+    qualityCode: string;
+    khataID: string;
+    khataName: string;
+    khataCode: string;
+    locationID: string;
+    locationName: string;
+    locationCode: string;
+    totalTakas: number;
+    availableTakas: number;
+    foldedTakas: number;
+    totalMeters: number;
+    availableMeters: number;
+    foldedMeters: number;
+    isExhausted: boolean;
+}
+export type FabricType = "folded" | "rfd";
+export type StockGrade = "fresh" | "seconds";
+export interface FabricStock extends BaseEntity {
+    type: FabricType;
+    grade: StockGrade;
+    foldingEntryID?: string;
+    rfdConversionID?: string;
+    purchaseVoucherID?: string;
+    qualityID: string;
+    qualityName: string;
+    qualityCode: string;
+    khataID: string;
+    khataName: string;
+    khataCode: string;
+    locationID: string;
+    locationName: string;
+    locationCode: string;
+    totalTakas: number;
+    availableTakas: number;
+    soldTakas: number;
+    totalMeters: number;
+    availableMeters: number;
+    soldMeters: number;
+    isExhausted: boolean;
+}
+export interface FoldingEntry extends BaseEntity {
+    voucherNumber: string;
+    date: number;
+    qualityID: string;
+    qualityName: string;
+    qualityCode: string;
+    khataID: string;
+    khataName: string;
+    khataCode: string;
+    locationID: string;
+    locationName: string;
+    locationCode: string;
+    greyTakas: number;
+    greyMeters: number;
+    foldedTakas: number;
+    foldedMeters: number;
+    shrinkageMeters: number;
+    shrinkagePercent: number;
+    description?: string;
+}
+export type RfdStatus = "sent" | "received";
+export interface RfdConversion extends BaseEntity {
+    voucherNumber: string;
+    qualityID: string;
+    qualityName: string;
+    qualityCode: string;
+    khataID: string;
+    khataName: string;
+    khataCode: string;
+    locationID: string;
+    locationName: string;
+    locationCode: string;
+    sentKhataID: string;
+    sentKhataName: string;
+    sentKhataCode: string;
+    sentLocationID: string;
+    sentLocationName: string;
+    sentLocationCode: string;
+    sentTakas: number;
+    sentMeters: number;
+    sentDate: number;
+    processor?: string;
+    receivedTakas?: number;
+    receivedMeters?: number;
+    receivedDate?: number;
+    shrinkageMeters?: number;
+    shrinkagePercent?: number;
+    status: RfdStatus;
+    description?: string;
+}
+//# sourceMappingURL=inventory.d.ts.map
