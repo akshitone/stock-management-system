@@ -80,13 +80,23 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, subtitle, children }: PageHeaderProps) {
   return (
-    <div className="geex-content__header">
-      <div className="geex-content__header__content">
+    <div className="geex-content__header" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+      <div className="geex-content__header__content" style={{ flex: '0 0 auto' }}>
         <h2 className="geex-content__header__title">{title}</h2>
         {subtitle && (
           <p className="geex-content__header__subtitle">{subtitle}</p>
         )}
       </div>
+      
+      {/* Spacer to push actions to the right */}
+      <div style={{ flex: '1 1 auto' }} />
+      
+      {/* Page-specific actions (e.g., Add button) */}
+      {children && (
+        <div style={{ flex: '0 0 auto' }}>
+          {children}
+        </div>
+      )}
       
       {/* Header Actions (toggle, search, notifications, user) */}
       <Header />

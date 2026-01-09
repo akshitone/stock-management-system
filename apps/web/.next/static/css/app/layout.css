@@ -12,7 +12,7 @@
    ============================================================================ */
 
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 /* Import Geex CSS from public folder - we'll inline critical styles */
 /* Note: style.css is loaded via link tag in layout.tsx for better performance */
@@ -34,7 +34,7 @@ html {
 }
 
 body {
-  font-family: 'Jost', sans-serif !important;
+  font-family: 'Poppins', sans-serif !important;
   font-size: 16px;
   line-height: 1.5;
   background-color: var(--section-color, #f5f5f5);
@@ -169,4 +169,18 @@ html, body {
   background-color: var(--primary-color);
   color: white;
 }
+
+/* Ensure buttons and inputs inherit font family */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* Button base styles */
+button {
+  font-weight: 500;
+}
+
 

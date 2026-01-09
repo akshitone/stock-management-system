@@ -1,3 +1,6 @@
 {
-  "/(dashboard)/page": "app/(dashboard)/page.js"
+  "/(dashboard)/page": "app/(dashboard)/page.js",
+  "/(dashboard)/masters/quality/page": "app/(dashboard)/masters/quality/page.js",
+  "/(dashboard)/masters/quality/[id]/edit/page": "app/(dashboard)/masters/quality/[id]/edit/page.js",
+  "/(dashboard)/masters/quality/new/page": "app/(dashboard)/masters/quality/new/page.js"
 }
