@@ -11,13 +11,34 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "test": "turbo run test",
     "api:dev": "npm run dev --workspace=@sms/api",
-    "web:dev": "npm run dev --workspace=@sms/web"
+    "web:dev": "npm run dev --workspace=@sms/web",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.0.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
     "turbo": "^2.0.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "typescript-eslint": "^8.52.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix --ignore-pattern '**/\\.next/**' --ignore-pattern '**/dist/**'",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "engines": {
     "node": ">=18"

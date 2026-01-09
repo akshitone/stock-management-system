@@ -42,6 +42,12 @@ npm run dev
 - `npm run build` - Build all apps
 - `npm run api:dev` - Start only API
 - `npm run web:dev` - Start only web app
+- `npm run lint` - Run ESLint on all apps
+- `npm run format` - Format code with Prettier
+
+## API Documentation
+
+Swagger/OpenAPI docs available at: http://localhost:4000/api/docs
 
 ## Schema Overview
 

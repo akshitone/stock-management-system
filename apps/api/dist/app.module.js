@@ -10,6 +10,7 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
+const nestjs_pino_1 = require("nestjs-pino");
 const quality_1 = require("./modules/masters/quality");
 let AppModule = class AppModule {
 };
@@ -20,6 +21,27 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
                 envFilePath: ".env",
+            }),
+            nestjs_pino_1.LoggerModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                useFactory: async (configService) => ({
+                    pinoHttp: {
+                        transport: configService.get("NODE_ENV") !== "production"
+                            ? {
+                                target: "pino-pretty",
+                                options: {
+                                    singleLine: true,
+                                    colorize: true,
+                                },
+                            }
+                            : undefined,
+                        level: configService.get("NODE_ENV") !== "production"
+                            ? "debug"
+                            : "info",
+                        redact: ["req.headers.authorization", "req.body.password"],
+                    },
+                }),
+                inject: [config_1.ConfigService],
             }),
             mongoose_1.MongooseModule.forRootAsync({
                 imports: [config_1.ConfigModule],

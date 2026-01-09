@@ -10,6 +10,13 @@ services:
       - mongodb_data:/data/db
     environment:
       - MONGO_INITDB_DATABASE=stock-management
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
 
 volumes:
   mongodb_data:
