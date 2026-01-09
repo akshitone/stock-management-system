@@ -5,12 +5,14 @@ import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/layout/Header';
 import { QualityForm } from '@/components/forms/QualityForm';
 import { qualityService, type CreateQualityDto } from '@/lib/api/quality.service';
+import { useToast } from '@/components/ui/Toast';
 
 // ============================================================================
 // Create Quality Page
 // ============================================================================
 export default function CreateQualityPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,10 +21,12 @@ export default function CreateQualityPage() {
       setIsLoading(true);
       setError(null);
       await qualityService.create(data);
+      showToast('Quality created successfully', 'create');
       router.push('/masters/quality');
     } catch (err: any) {
       setError(err.message || 'Failed to create quality');
-      throw err; // Re-throw to let form handle it
+      showToast(err.message || 'Failed to create quality', 'error');
+      throw err;
     } finally {
       setIsLoading(false);
     }

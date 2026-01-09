@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { PageHeader } from '@/components/layout/Header';
 import { qualityService } from '@/lib/api/quality.service';
+import { useToast } from '@/components/ui/Toast';
 import type { Quality } from '@sms/shared';
 
 // ============================================================================
@@ -16,6 +17,7 @@ type SortOrder = 'asc' | 'desc';
 // Quality List Page
 // ============================================================================
 export default function QualityListPage() {
+  const { showToast } = useToast();
   const [qualities, setQualities] = useState<Quality[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,6 +33,9 @@ export default function QualityListPage() {
   
   // View modal
   const [viewQuality, setViewQuality] = useState<Quality | null>(null);
+  
+  // Delete confirmation modal
+  const [deleteConfirm, setDeleteConfirm] = useState<{ show: boolean; id: string; name: string }>({ show: false, id: '', name: '' });
 
   const fetchQualities = useCallback(async () => {
     try {
@@ -95,14 +100,25 @@ export default function QualityListPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this quality?')) return;
+  const handleDeleteClick = (id: string, name: string) => {
+    setDeleteConfirm({ show: true, id, name });
+  };
+
+  const handleDeleteConfirm = async () => {
+    const { id, name } = deleteConfirm;
+    setDeleteConfirm({ show: false, id: '', name: '' });
+    
     try {
       await qualityService.delete(id);
+      showToast(`Quality "${name}" deleted successfully`, 'delete');
       fetchQualities();
     } catch (err: any) {
-      alert(err.message || 'Failed to delete quality');
+      showToast(err.message || 'Failed to delete quality', 'error');
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirm({ show: false, id: '', name: '' });
   };
 
   const handleView = async (id: string) => {
@@ -219,7 +235,7 @@ export default function QualityListPage() {
                         
                         {/* Delete - Red */}
                         <button
-                          onClick={() => handleDelete(quality.id)}
+                          onClick={() => handleDeleteClick(quality.id, quality.name)}
                           style={{ width: '36px', height: '36px', borderRadius: '8px', border: 'none', background: 'rgba(239, 68, 68, 0.15)', color: '#EF4444', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}
                           title="Delete"
                         >
@@ -312,6 +328,35 @@ export default function QualityListPage() {
                   <i className="uil uil-edit" style={{ marginRight: '8px' }} />Edit Quality
                 </Link>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm.show && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px' }} onClick={handleDeleteCancel}>
+          <div style={{ background: 'var(--white-color)', borderRadius: '18px', maxWidth: '400px', width: '100%', padding: '24px', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(239, 68, 68, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+              <i className="uil uil-trash-alt" style={{ fontSize: '28px', color: '#EF4444' }} />
+            </div>
+            <h3 style={{ margin: '0 0 12px', color: 'var(--body-color)', fontSize: '20px' }}>Delete Quality?</h3>
+            <p style={{ margin: '0 0 24px', color: 'var(--sec-color)', fontSize: '14px' }}>
+              Are you sure you want to delete <strong>"{deleteConfirm.name}"</strong>? This action cannot be undone.
+            </p>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+              <button
+                onClick={handleDeleteCancel}
+                style={{ padding: '12px 24px', borderRadius: '10px', border: '1px solid var(--grayTwo-color)', background: 'var(--white-color)', color: 'var(--body-color)', cursor: 'pointer', fontWeight: 500, fontSize: '14px' }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                style={{ padding: '12px 24px', borderRadius: '10px', border: 'none', background: '#EF4444', color: 'white', cursor: 'pointer', fontWeight: 500, fontSize: '14px' }}
+              >
+                Yes, Delete
+              </button>
             </div>
           </div>
         </div>

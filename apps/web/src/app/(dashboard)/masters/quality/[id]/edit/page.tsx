@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { PageHeader } from '@/components/layout/Header';
 import { QualityForm } from '@/components/forms/QualityForm';
 import { qualityService, type CreateQualityDto } from '@/lib/api/quality.service';
+import { useToast } from '@/components/ui/Toast';
 import type { Quality } from '@sms/shared';
 
 // ============================================================================
@@ -14,6 +15,7 @@ import type { Quality } from '@sms/shared';
 export default function EditQualityPage() {
   const router = useRouter();
   const params = useParams();
+  const { showToast } = useToast();
   const id = params.id as string;
 
   const [quality, setQuality] = useState<Quality | null>(null);
@@ -44,9 +46,11 @@ export default function EditQualityPage() {
       setIsSubmitting(true);
       setError(null);
       await qualityService.update(id, data);
+      showToast('Quality updated successfully', 'update');
       router.push('/masters/quality');
     } catch (err: any) {
       setError(err.message || 'Failed to update quality');
+      showToast(err.message || 'Failed to update quality', 'error');
       throw err;
     } finally {
       setIsSubmitting(false);
