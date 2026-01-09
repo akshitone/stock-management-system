@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
 const nestjs_pino_1 = require("nestjs-pino");
+const auth_1 = require("./modules/auth");
 const quality_1 = require("./modules/masters/quality");
 let AppModule = class AppModule {
 };
@@ -48,6 +49,7 @@ exports.AppModule = AppModule = __decorate([
                 }),
                 inject: [config_1.ConfigService],
             }),
+            auth_1.AuthModule,
             quality_1.QualityModule,
         ],
         controllers: [],

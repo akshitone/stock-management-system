@@ -4,6 +4,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { LoggerModule } from "nestjs-pino";
 
 // Feature Modules
+import { AuthModule } from "./modules/auth";
 import { QualityModule } from "./modules/masters/quality";
 
 @Module({
@@ -48,6 +49,7 @@ import { QualityModule } from "./modules/masters/quality";
     }),
 
     // Feature Modules
+    AuthModule,
     QualityModule,
   ],
   controllers: [],
