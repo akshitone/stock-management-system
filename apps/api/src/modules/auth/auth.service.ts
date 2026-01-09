@@ -33,7 +33,7 @@ export class AuthService {
       throw new UnauthorizedException("Invalid credentials");
     }
 
-    user.lastLoginAt = new Date();
+    user.lastLoginAt = Date.now();
     await user.save();
 
     return this.generateTokens(user);
@@ -52,6 +52,7 @@ export class AuthService {
       password,
       name,
       role: role || UserRole.USER,
+      createdAt: Date.now(),
     });
 
     await user.save();
@@ -101,6 +102,7 @@ export class AuthService {
         name: adminName,
         role: UserRole.ADMIN,
         isActive: true,
+        createdAt: Date.now(),
       });
       await admin.save();
       this.logger.log(`Admin user seeded: ${adminEmail}`);

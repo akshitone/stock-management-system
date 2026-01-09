@@ -50,6 +50,6 @@ export class UserProfileDto {
   name: string;
   role: string;
   isActive: boolean;
-  lastLoginAt?: Date;
-  createdAt: Date;
+  lastLoginAt?: number;
+  createdAt: number;
 }

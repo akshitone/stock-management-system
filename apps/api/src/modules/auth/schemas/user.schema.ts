@@ -9,7 +9,7 @@ export enum UserRole {
   USER = "user",
 }
 
-@Schema({ timestamps: true, collection: "users" })
+@Schema({ timestamps: false, collection: "users" })
 export class User {
   @Prop({ required: true, unique: true, lowercase: true, trim: true })
   email: string;
@@ -27,10 +27,13 @@ export class User {
   isActive: boolean;
 
   @Prop()
-  lastLoginAt: Date;
+  lastLoginAt: number;
 
-  createdAt: Date;
-  updatedAt: Date;
+  @Prop({ required: true })
+  createdAt: number;
+
+  @Prop()
+  updatedAt: number;
 
   comparePassword: (candidatePassword: string) => Promise<boolean>;
 }
