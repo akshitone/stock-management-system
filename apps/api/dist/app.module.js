@@ -35,9 +35,7 @@ exports.AppModule = AppModule = __decorate([
                                 },
                             }
                             : undefined,
-                        level: configService.get("NODE_ENV") !== "production"
-                            ? "debug"
-                            : "info",
+                        level: configService.get("NODE_ENV") !== "production" ? "debug" : "info",
                         redact: ["req.headers.authorization", "req.body.password"],
                     },
                 }),
@@ -46,8 +44,7 @@ exports.AppModule = AppModule = __decorate([
             mongoose_1.MongooseModule.forRootAsync({
                 imports: [config_1.ConfigModule],
                 useFactory: async (configService) => ({
-                    uri: configService.get("MONGODB_URI") ||
-                        "mongodb://localhost:27017/stock-management",
+                    uri: configService.get("MONGODB_URI") || "mongodb://localhost:27017/stock-management",
                 }),
                 inject: [config_1.ConfigService],
             }),
