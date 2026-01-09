@@ -1,44 +1,37 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { ToastProvider } from '@/components/ui/Toast';
+import type { Metadata } from "next";
+import "./globals.css";
+import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: 'Stock Management System',
-  description: 'Textile manufacturing and trading management system',
+  title: "Stock Management System",
+  description: "Textile manufacturing and trading management system",
   icons: {
-    icon: '/img/favicon.svg',
+    icon: "/img/favicon.svg",
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" dir="ltr">
       <head>
         {/* Google Fonts - Poppins (must load before other CSS) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" 
-          rel="stylesheet" 
+        <link
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
         />
         {/* Geex Template CSS */}
         <link rel="stylesheet" href="/css/style.css" />
         {/* Unicons (Icon Library used by Geex) */}
-        <link 
-          rel="stylesheet" 
-          href="https://cdn.jsdelivr.net/npm/@iconscout/unicons@4.0.8/css/line.min.css" 
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@iconscout/unicons@4.0.8/css/line.min.css"
         />
       </head>
       <body className="geex-dashboard">
-        <ToastProvider>
-          {children}
-        </ToastProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
 }
-
