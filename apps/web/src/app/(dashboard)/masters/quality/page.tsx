@@ -131,28 +131,29 @@ export default function QualityListPage() {
         </div>
       )}
 
-      {/* Main Card with Table */}
+      {/* Main Card with Title + Table */}
       <div style={{ background: 'var(--white-color)', borderRadius: '18px', overflow: 'hidden' }}>
-        {/* Card Header with Search */}
-        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--gray-color)', display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: 'var(--body-color)', flex: '0 0 auto' }}>
+        {/* Card Header: Title + Search */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', flexWrap: 'wrap', gap: '12px' }}>
+          <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: 'var(--body-color)' }}>
             All Qualities
           </h3>
-          <div style={{ flex: '1 1 300px', position: 'relative', maxWidth: '400px', marginLeft: 'auto' }}>
-            <i className="uil uil-search" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--sec-color)' }} />
-            <input
-              type="text"
-              placeholder="Search by name, HSN code..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ width: '100%', padding: '10px 14px 10px 40px', borderRadius: '10px', border: '1px solid var(--grayTwo-color)', background: 'var(--section-color)', color: 'var(--body-color)', fontSize: '14px', outline: 'none' }}
-            />
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <div style={{ position: 'relative' }}>
+              <i className="uil uil-search" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--sec-color)' }} />
+              <input
+                type="text"
+                placeholder="Search by name, HSN code..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ width: '280px', padding: '10px 14px 10px 40px', borderRadius: '10px', border: '1px solid var(--grayTwo-color)', background: 'var(--section-color)', color: 'var(--body-color)', fontSize: '14px', outline: 'none' }}
+              />
+            </div>
+            <button onClick={fetchQualities} style={{ padding: '10px 14px', borderRadius: '10px', border: '1px solid var(--grayTwo-color)', background: 'var(--section-color)', color: 'var(--body-color)', cursor: 'pointer' }} title="Refresh">
+              <i className="uil uil-refresh" />
+            </button>
           </div>
-          <button onClick={fetchQualities} style={{ padding: '10px 14px', borderRadius: '10px', border: '1px solid var(--grayTwo-color)', background: 'var(--white-color)', color: 'var(--body-color)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }} title="Refresh">
-            <i className="uil uil-refresh" />
-          </button>
         </div>
-
         {/* Table */}
         {loading ? (
           <div style={{ padding: '60px', textAlign: 'center', color: 'var(--sec-color)' }}>
@@ -168,7 +169,7 @@ export default function QualityListPage() {
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
               <thead>
-                <tr style={{ background: 'var(--section-color)' }}>
+                <tr style={{ background: 'var(--white-color)' }}>
                   <SortableHeader field="name" label="Name" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} />
                   <SortableHeader field="reed" label="Reed" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} />
                   <SortableHeader field="picks" label="Picks" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} />
@@ -233,7 +234,7 @@ export default function QualityListPage() {
           </div>
         )}
 
-        {/* Pagination - Standard Layout */}
+        {/* Pagination */}
         {!loading && processedData.length > 0 && (
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderTop: '1px solid var(--gray-color)', flexWrap: 'wrap', gap: '12px' }}>
             {/* Left side: Per page dropdown + Info text */}
@@ -255,37 +256,19 @@ export default function QualityListPage() {
             
             {/* Right side: Pagination controls */}
             <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-              <button
-                onClick={() => setCurrentPage(1)}
-                disabled={currentPage === 1}
-                style={{ padding: '8px 10px', borderRadius: '8px', border: '1px solid var(--grayTwo-color)', background: currentPage === 1 ? 'var(--gray-color)' : 'var(--white-color)', color: 'var(--body-color)', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', opacity: currentPage === 1 ? 0.5 : 1 }}
-              >
+              <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1} style={{ padding: '8px 10px', borderRadius: '8px', border: '1px solid var(--grayTwo-color)', background: currentPage === 1 ? 'var(--gray-color)' : 'var(--white-color)', color: 'var(--body-color)', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', opacity: currentPage === 1 ? 0.5 : 1 }}>
                 <i className="uil uil-angle-double-left" />
               </button>
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                style={{ padding: '8px 10px', borderRadius: '8px', border: '1px solid var(--grayTwo-color)', background: currentPage === 1 ? 'var(--gray-color)' : 'var(--white-color)', color: 'var(--body-color)', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', opacity: currentPage === 1 ? 0.5 : 1 }}
-              >
+              <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1} style={{ padding: '8px 10px', borderRadius: '8px', border: '1px solid var(--grayTwo-color)', background: currentPage === 1 ? 'var(--gray-color)' : 'var(--white-color)', color: 'var(--body-color)', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', opacity: currentPage === 1 ? 0.5 : 1 }}>
                 <i className="uil uil-angle-left" />
               </button>
-              
               <span style={{ padding: '8px 16px', background: 'var(--section-color)', borderRadius: '8px', color: 'var(--body-color)', fontSize: '13px', fontWeight: 500 }}>
                 Page {currentPage} of {totalPages}
               </span>
-              
-              <button
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                style={{ padding: '8px 10px', borderRadius: '8px', border: '1px solid var(--grayTwo-color)', background: currentPage === totalPages ? 'var(--gray-color)' : 'var(--white-color)', color: 'var(--body-color)', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', opacity: currentPage === totalPages ? 0.5 : 1 }}
-              >
+              <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} style={{ padding: '8px 10px', borderRadius: '8px', border: '1px solid var(--grayTwo-color)', background: currentPage === totalPages ? 'var(--gray-color)' : 'var(--white-color)', color: 'var(--body-color)', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', opacity: currentPage === totalPages ? 0.5 : 1 }}>
                 <i className="uil uil-angle-right" />
               </button>
-              <button
-                onClick={() => setCurrentPage(totalPages)}
-                disabled={currentPage === totalPages}
-                style={{ padding: '8px 10px', borderRadius: '8px', border: '1px solid var(--grayTwo-color)', background: currentPage === totalPages ? 'var(--gray-color)' : 'var(--white-color)', color: 'var(--body-color)', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', opacity: currentPage === totalPages ? 0.5 : 1 }}
-              >
+              <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} style={{ padding: '8px 10px', borderRadius: '8px', border: '1px solid var(--grayTwo-color)', background: currentPage === totalPages ? 'var(--gray-color)' : 'var(--white-color)', color: 'var(--body-color)', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', opacity: currentPage === totalPages ? 0.5 : 1 }}>
                 <i className="uil uil-angle-double-right" />
               </button>
             </div>
