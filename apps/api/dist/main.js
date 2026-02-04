@@ -19,7 +19,8 @@ async function bootstrap() {
         transform: true,
         forbidNonWhitelisted: true,
     }));
-    app.useGlobalInterceptors(new common_2.ResponseTransformInterceptor());
+    const reflector = app.get(core_1.Reflector);
+    app.useGlobalInterceptors(new common_2.ResponseTransformInterceptor(reflector));
     app.useGlobalFilters(new common_2.HttpExceptionFilter());
     const config = new swagger_1.DocumentBuilder()
         .setTitle("Stock Management System API")

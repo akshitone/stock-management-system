@@ -5,6 +5,7 @@ import { Public } from "./decorators/public.decorator";
 import { CurrentUser } from "./decorators/current-user.decorator";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { UserDocument } from "./schemas/user.schema";
+import { ResponseMessage, MESSAGES } from "../../common";
 
 @Controller("auth")
 export class AuthController {
@@ -13,6 +14,7 @@ export class AuthController {
   @Post("login")
   @Public()
   @HttpCode(HttpStatus.OK)
+  @ResponseMessage(MESSAGES.AUTH.LOGIN_SUCCESS)
   async login(@Body() loginDto: LoginDto): Promise<AuthResponseDto> {
     return this.authService.login(loginDto);
   }
@@ -20,6 +22,7 @@ export class AuthController {
   @Post("register")
   @Public()
   @HttpCode(HttpStatus.CREATED)
+  @ResponseMessage(MESSAGES.AUTH.REGISTER_SUCCESS)
   async register(@Body() registerDto: RegisterDto): Promise<AuthResponseDto> {
     return this.authService.register(registerDto);
   }
@@ -27,12 +30,14 @@ export class AuthController {
   @Post("refresh")
   @Public()
   @HttpCode(HttpStatus.OK)
+  @ResponseMessage(MESSAGES.AUTH.REFRESH_SUCCESS)
   async refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<AuthResponseDto> {
     return this.authService.refreshToken(refreshTokenDto);
   }
 
   @Get("me")
   @UseGuards(JwtAuthGuard)
+  @ResponseMessage(MESSAGES.AUTH.PROFILE_RETRIEVED)
   async getProfile(@CurrentUser() user: UserDocument): Promise<UserProfileDto> {
     return {
       id: user._id.toString(),

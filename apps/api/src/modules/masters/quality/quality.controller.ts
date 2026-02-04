@@ -13,6 +13,7 @@ import {
 import { QualityService } from "./quality.service";
 import { CreateQualityDto, UpdateQualityDto } from "./quality.dto";
 import { Quality } from "./quality.schema";
+import { ResponseMessage, MESSAGES } from "../../../common";
 
 @Controller("masters/quality")
 export class QualityController {
@@ -21,6 +22,7 @@ export class QualityController {
   // POST /api/masters/quality
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @ResponseMessage(MESSAGES.QUALITY.CREATED)
   async create(@Body() createDto: CreateQualityDto): Promise<Quality> {
     // TODO: Get userId from JWT token when auth is implemented
     const userId = "system";
@@ -29,30 +31,29 @@ export class QualityController {
 
   // GET /api/masters/quality
   @Get()
-  async findAll(
-    @Query("includeDeleted") includeDeleted?: string
-  ): Promise<Quality[]> {
+  @ResponseMessage(MESSAGES.QUALITY.LIST_RETRIEVED)
+  async findAll(@Query("includeDeleted") includeDeleted?: string): Promise<Quality[]> {
     return this.qualityService.findAll(includeDeleted === "true");
   }
 
   // GET /api/masters/quality/active
   @Get("active")
+  @ResponseMessage(MESSAGES.QUALITY.LIST_RETRIEVED)
   async findActive(): Promise<Quality[]> {
     return this.qualityService.findActive();
   }
 
   // GET /api/masters/quality/:id
   @Get(":id")
+  @ResponseMessage(MESSAGES.QUALITY.RETRIEVED)
   async findOne(@Param("id") id: string): Promise<Quality> {
     return this.qualityService.findOne(id);
   }
 
   // PUT /api/masters/quality/:id
   @Put(":id")
-  async update(
-    @Param("id") id: string,
-    @Body() updateDto: UpdateQualityDto
-  ): Promise<Quality> {
+  @ResponseMessage(MESSAGES.QUALITY.UPDATED)
+  async update(@Param("id") id: string, @Body() updateDto: UpdateQualityDto): Promise<Quality> {
     // TODO: Get userId from JWT token when auth is implemented
     const userId = "system";
     return this.qualityService.update(id, updateDto, userId);
@@ -61,6 +62,7 @@ export class QualityController {
   // DELETE /api/masters/quality/:id (soft delete)
   @Delete(":id")
   @HttpCode(HttpStatus.OK)
+  @ResponseMessage(MESSAGES.QUALITY.DELETED)
   async softDelete(@Param("id") id: string): Promise<Quality> {
     // TODO: Get userId from JWT token when auth is implemented
     const userId = "system";
@@ -69,6 +71,7 @@ export class QualityController {
 
   // POST /api/masters/quality/:id/restore
   @Post(":id/restore")
+  @ResponseMessage(MESSAGES.QUALITY.UPDATED)
   async restore(@Param("id") id: string): Promise<Quality> {
     // TODO: Get userId from JWT token when auth is implemented
     const userId = "system";

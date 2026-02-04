@@ -1,4 +1,4 @@
-import { NestFactory } from "@nestjs/core";
+import { NestFactory, Reflector } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { Logger } from "nestjs-pino";
@@ -30,7 +30,8 @@ async function bootstrap() {
   );
 
   // Global response interceptor (for unified success responses)
-  app.useGlobalInterceptors(new ResponseTransformInterceptor());
+  const reflector = app.get(Reflector);
+  app.useGlobalInterceptors(new ResponseTransformInterceptor(reflector));
 
   // Global exception filter (for unified error responses)
   app.useGlobalFilters(new HttpExceptionFilter());

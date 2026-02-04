@@ -16,6 +16,7 @@ exports.QualityController = void 0;
 const common_1 = require("@nestjs/common");
 const quality_service_1 = require("./quality.service");
 const quality_dto_1 = require("./quality.dto");
+const common_2 = require("../../../common");
 let QualityController = class QualityController {
     constructor(qualityService) {
         this.qualityService = qualityService;
@@ -50,6 +51,7 @@ exports.QualityController = QualityController;
 __decorate([
     (0, common_1.Post)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
+    (0, common_2.ResponseMessage)(common_2.MESSAGES.QUALITY.CREATED),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [quality_dto_1.CreateQualityDto]),
@@ -57,6 +59,7 @@ __decorate([
 ], QualityController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, common_2.ResponseMessage)(common_2.MESSAGES.QUALITY.LIST_RETRIEVED),
     __param(0, (0, common_1.Query)("includeDeleted")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -64,12 +67,14 @@ __decorate([
 ], QualityController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)("active"),
+    (0, common_2.ResponseMessage)(common_2.MESSAGES.QUALITY.LIST_RETRIEVED),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], QualityController.prototype, "findActive", null);
 __decorate([
     (0, common_1.Get)(":id"),
+    (0, common_2.ResponseMessage)(common_2.MESSAGES.QUALITY.RETRIEVED),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -77,6 +82,7 @@ __decorate([
 ], QualityController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Put)(":id"),
+    (0, common_2.ResponseMessage)(common_2.MESSAGES.QUALITY.UPDATED),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -86,6 +92,7 @@ __decorate([
 __decorate([
     (0, common_1.Delete)(":id"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, common_2.ResponseMessage)(common_2.MESSAGES.QUALITY.DELETED),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -93,6 +100,7 @@ __decorate([
 ], QualityController.prototype, "softDelete", null);
 __decorate([
     (0, common_1.Post)(":id/restore"),
+    (0, common_2.ResponseMessage)(common_2.MESSAGES.QUALITY.UPDATED),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

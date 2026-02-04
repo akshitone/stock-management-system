@@ -6,6 +6,7 @@ import { ConfigService } from "@nestjs/config";
 import { User, UserDocument, UserRole } from "./schemas/user.schema";
 import { LoginDto, RegisterDto, AuthResponseDto, RefreshTokenDto } from "./dto";
 import { JwtPayload } from "./strategies/jwt.strategy";
+import { MESSAGES } from "../../common";
 
 @Injectable()
 export class AuthService {
@@ -22,15 +23,15 @@ export class AuthService {
     const user = await this.userModel.findOne({ email: email.toLowerCase() }).exec();
 
     if (!user) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException(MESSAGES.AUTH.INVALID_CREDENTIALS);
     }
     if (!user.isActive) {
-      throw new UnauthorizedException("Account is deactivated");
+      throw new UnauthorizedException(MESSAGES.AUTH.UNAUTHORIZED);
     }
 
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException(MESSAGES.AUTH.INVALID_CREDENTIALS);
     }
 
     user.lastLoginAt = Date.now();
@@ -44,7 +45,7 @@ export class AuthService {
 
     const existingUser = await this.userModel.findOne({ email: email.toLowerCase() }).exec();
     if (existingUser) {
-      throw new ConflictException("User with this email already exists");
+      throw new ConflictException(MESSAGES.AUTH.USER_ALREADY_EXISTS);
     }
 
     const user = new this.userModel({
@@ -71,19 +72,19 @@ export class AuthService {
 
       const user = await this.userModel.findById(payload.sub).exec();
       if (!user || !user.isActive) {
-        throw new UnauthorizedException("Invalid refresh token");
+        throw new UnauthorizedException(MESSAGES.AUTH.TOKEN_INVALID);
       }
 
       return this.generateTokens(user);
     } catch {
-      throw new UnauthorizedException("Invalid or expired refresh token");
+      throw new UnauthorizedException(MESSAGES.AUTH.TOKEN_EXPIRED);
     }
   }
 
   async getProfile(userId: string): Promise<UserDocument> {
     const user = await this.userModel.findById(userId).exec();
     if (!user) {
-      throw new UnauthorizedException("User not found");
+      throw new UnauthorizedException(MESSAGES.AUTH.USER_NOT_FOUND);
     }
     return user;
   }

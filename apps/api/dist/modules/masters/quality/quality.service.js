@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const quality_schema_1 = require("./quality.schema");
+const common_2 = require("../../../common");
 let QualityService = class QualityService {
     constructor(qualityModel) {
         this.qualityModel = qualityModel;
@@ -34,26 +35,19 @@ let QualityService = class QualityService {
         return this.qualityModel.find(filter).sort({ name: 1 }).exec();
     }
     async findActive() {
-        return this.qualityModel
-            .find({ isActive: true, deletedAt: null })
-            .sort({ name: 1 })
-            .exec();
+        return this.qualityModel.find({ isActive: true, deletedAt: null }).sort({ name: 1 }).exec();
     }
     async findOne(id) {
-        const quality = await this.qualityModel
-            .findOne({ id, deletedAt: null })
-            .exec();
+        const quality = await this.qualityModel.findOne({ id, deletedAt: null }).exec();
         if (!quality) {
-            throw new common_1.NotFoundException(`Quality with ID ${id} not found`);
+            throw new common_1.NotFoundException(common_2.MESSAGES.QUALITY.NOT_FOUND);
         }
         return quality;
     }
     async findById(mongoId) {
-        const quality = await this.qualityModel
-            .findOne({ _id: mongoId, deletedAt: null })
-            .exec();
+        const quality = await this.qualityModel.findOne({ _id: mongoId, deletedAt: null }).exec();
         if (!quality) {
-            throw new common_1.NotFoundException(`Quality not found`);
+            throw new common_1.NotFoundException(common_2.MESSAGES.QUALITY.NOT_FOUND);
         }
         return quality;
     }
@@ -66,7 +60,7 @@ let QualityService = class QualityService {
         }, { new: true })
             .exec();
         if (!quality) {
-            throw new common_1.NotFoundException(`Quality with ID ${id} not found`);
+            throw new common_1.NotFoundException(common_2.MESSAGES.QUALITY.NOT_FOUND);
         }
         return quality;
     }
@@ -79,7 +73,7 @@ let QualityService = class QualityService {
         }, { new: true })
             .exec();
         if (!quality) {
-            throw new common_1.NotFoundException(`Quality with ID ${id} not found`);
+            throw new common_1.NotFoundException(common_2.MESSAGES.QUALITY.NOT_FOUND);
         }
         return quality;
     }
@@ -93,14 +87,14 @@ let QualityService = class QualityService {
         }, { new: true })
             .exec();
         if (!quality) {
-            throw new common_1.NotFoundException(`Quality with ID ${id} not found or not deleted`);
+            throw new common_1.NotFoundException(common_2.MESSAGES.QUALITY.NOT_FOUND);
         }
         return quality;
     }
     async hardDelete(id) {
         const result = await this.qualityModel.deleteOne({ id }).exec();
         if (result.deletedCount === 0) {
-            throw new common_1.NotFoundException(`Quality with ID ${id} not found`);
+            throw new common_1.NotFoundException(common_2.MESSAGES.QUALITY.NOT_FOUND);
         }
     }
 };

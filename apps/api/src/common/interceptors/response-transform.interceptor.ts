@@ -1,21 +1,29 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Request } from "express";
 import { ApiResponse } from "../interfaces";
+import { RESPONSE_MESSAGE_KEY } from "../decorators";
+import { MESSAGES } from "../constants";
 
 /**
  * Response Transformer Interceptor
  *
  * Wraps all successful responses in a consistent ApiResponse format.
- * Works in conjunction with HttpExceptionFilter for unified response structure.
+ * Uses @ResponseMessage decorator for custom messages, falls back to HTTP method defaults.
  */
 @Injectable()
 export class ResponseTransformInterceptor<T> implements NestInterceptor<T, ApiResponse<T>> {
+  constructor(private readonly reflector: Reflector) {}
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<ApiResponse<T>> {
     const ctx = context.switchToHttp();
     const request = ctx.getRequest<Request>();
     const response = ctx.getResponse();
+
+    // Get custom message from @ResponseMessage decorator
+    const customMessage = this.reflector.get<string>(RESPONSE_MESSAGE_KEY, context.getHandler());
 
     return next.handle().pipe(
       map((data) => {
@@ -28,7 +36,7 @@ export class ResponseTransformInterceptor<T> implements NestInterceptor<T, ApiRe
         return {
           success: true,
           statusCode: response.statusCode,
-          message: this.getSuccessMessage(request.method),
+          message: customMessage || this.getDefaultMessage(request.method),
           data,
           timestamp: Date.now(),
           path: request.url,
@@ -38,16 +46,16 @@ export class ResponseTransformInterceptor<T> implements NestInterceptor<T, ApiRe
   }
 
   /**
-   * Get appropriate success message based on HTTP method
+   * Get default success message based on HTTP method
    */
-  private getSuccessMessage(method: string): string {
+  private getDefaultMessage(method: string): string {
     const messages: Record<string, string> = {
-      GET: "Data retrieved successfully",
-      POST: "Resource created successfully",
-      PUT: "Resource updated successfully",
-      PATCH: "Resource updated successfully",
-      DELETE: "Resource deleted successfully",
+      GET: MESSAGES.GENERIC.RETRIEVED,
+      POST: MESSAGES.GENERIC.CREATED,
+      PUT: MESSAGES.GENERIC.UPDATED,
+      PATCH: MESSAGES.GENERIC.UPDATED,
+      DELETE: MESSAGES.GENERIC.DELETED,
     };
-    return messages[method] || "Operation completed successfully";
+    return messages[method] || MESSAGES.GENERIC.OPERATION_SUCCESS;
   }
 }

@@ -3,12 +3,11 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Quality } from "./quality.schema";
 import { CreateQualityDto, UpdateQualityDto } from "./quality.dto";
+import { MESSAGES } from "../../../common";
 
 @Injectable()
 export class QualityService {
-  constructor(
-    @InjectModel(Quality.name) private qualityModel: Model<Quality>
-  ) {}
+  constructor(@InjectModel(Quality.name) private qualityModel: Model<Quality>) {}
 
   // Create
   async create(createDto: CreateQualityDto, userId: string): Promise<Quality> {
@@ -28,40 +27,29 @@ export class QualityService {
 
   // Find Active Only
   async findActive(): Promise<Quality[]> {
-    return this.qualityModel
-      .find({ isActive: true, deletedAt: null })
-      .sort({ name: 1 })
-      .exec();
+    return this.qualityModel.find({ isActive: true, deletedAt: null }).sort({ name: 1 }).exec();
   }
 
   // Find One by ID
   async findOne(id: string): Promise<Quality> {
-    const quality = await this.qualityModel
-      .findOne({ id, deletedAt: null })
-      .exec();
+    const quality = await this.qualityModel.findOne({ id, deletedAt: null }).exec();
     if (!quality) {
-      throw new NotFoundException(`Quality with ID ${id} not found`);
+      throw new NotFoundException(MESSAGES.QUALITY.NOT_FOUND);
     }
     return quality;
   }
 
   // Find by MongoDB _id
   async findById(mongoId: string): Promise<Quality> {
-    const quality = await this.qualityModel
-      .findOne({ _id: mongoId, deletedAt: null })
-      .exec();
+    const quality = await this.qualityModel.findOne({ _id: mongoId, deletedAt: null }).exec();
     if (!quality) {
-      throw new NotFoundException(`Quality not found`);
+      throw new NotFoundException(MESSAGES.QUALITY.NOT_FOUND);
     }
     return quality;
   }
 
   // Update
-  async update(
-    id: string,
-    updateDto: UpdateQualityDto,
-    userId: string
-  ): Promise<Quality> {
+  async update(id: string, updateDto: UpdateQualityDto, userId: string): Promise<Quality> {
     const quality = await this.qualityModel
       .findOneAndUpdate(
         { id, deletedAt: null },
@@ -75,7 +63,7 @@ export class QualityService {
       .exec();
 
     if (!quality) {
-      throw new NotFoundException(`Quality with ID ${id} not found`);
+      throw new NotFoundException(MESSAGES.QUALITY.NOT_FOUND);
     }
     return quality;
   }
@@ -95,7 +83,7 @@ export class QualityService {
       .exec();
 
     if (!quality) {
-      throw new NotFoundException(`Quality with ID ${id} not found`);
+      throw new NotFoundException(MESSAGES.QUALITY.NOT_FOUND);
     }
     return quality;
   }
@@ -116,9 +104,7 @@ export class QualityService {
       .exec();
 
     if (!quality) {
-      throw new NotFoundException(
-        `Quality with ID ${id} not found or not deleted`
-      );
+      throw new NotFoundException(MESSAGES.QUALITY.NOT_FOUND);
     }
     return quality;
   }
@@ -127,7 +113,7 @@ export class QualityService {
   async hardDelete(id: string): Promise<void> {
     const result = await this.qualityModel.deleteOne({ id }).exec();
     if (result.deletedCount === 0) {
-      throw new NotFoundException(`Quality with ID ${id} not found`);
+      throw new NotFoundException(MESSAGES.QUALITY.NOT_FOUND);
     }
   }
 }
