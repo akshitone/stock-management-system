@@ -5,6 +5,7 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const nestjs_pino_1 = require("nestjs-pino");
 const app_module_1 = require("./app.module");
+const common_2 = require("./common");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, { bufferLogs: true });
     app.useLogger(app.get(nestjs_pino_1.Logger));
@@ -18,6 +19,7 @@ async function bootstrap() {
         transform: true,
         forbidNonWhitelisted: true,
     }));
+    app.useGlobalFilters(new common_2.HttpExceptionFilter());
     const config = new swagger_1.DocumentBuilder()
         .setTitle("Stock Management System API")
         .setDescription("API for Textile Manufacturing & Trading Stock Management")
