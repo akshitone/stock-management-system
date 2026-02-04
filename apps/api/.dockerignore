@@ -1,0 +1,42 @@
+# Development files
+node_modules
+npm-debug.log
+.npm
+.env
+.env.local
+.env.*.local
+
+# Build output (we copy it separately)
+dist
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Test files
+coverage
+.nyc_output
+test
+*.spec.ts
+*.e2e-spec.ts
+
+# Documentation
+docs
+*.md
+!README.md
+
+# Git
+.git
+.gitignore
+
+# Docker files (not needed inside container)
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Misc
+.DS_Store
+Thumbs.db
+*.log
