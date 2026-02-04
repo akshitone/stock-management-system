@@ -3,7 +3,7 @@ import { ValidationPipe } from "@nestjs/common";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { Logger } from "nestjs-pino";
 import { AppModule } from "./app.module";
-import { HttpExceptionFilter } from "./common";
+import { HttpExceptionFilter, ResponseTransformInterceptor } from "./common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -29,7 +29,10 @@ async function bootstrap() {
     })
   );
 
-  // Global exception filter
+  // Global response interceptor (for unified success responses)
+  app.useGlobalInterceptors(new ResponseTransformInterceptor());
+
+  // Global exception filter (for unified error responses)
   app.useGlobalFilters(new HttpExceptionFilter());
 
   // Swagger configuration

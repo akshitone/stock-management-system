@@ -9,12 +9,12 @@ import {
 import { Request, Response } from "express";
 import { Error as MongooseError } from "mongoose";
 import { BusinessException } from "../exceptions";
-import { ErrorResponse } from "../interfaces";
+import { ApiResponse } from "../interfaces";
 
 /**
  * Global HTTP Exception Filter
  *
- * Catches all exceptions and transforms them into a consistent JSON response format.
+ * Catches all exceptions and transforms them into a consistent ApiResponse format.
  * Handles:
  * - NestJS HttpExceptions (including validation errors)
  * - Custom BusinessExceptions with error codes
@@ -47,13 +47,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
     response.status(errorResponse.statusCode).json(errorResponse);
   }
 
-  private buildErrorResponse(exception: unknown, path: string): ErrorResponse {
+  private buildErrorResponse(exception: unknown, path: string): ApiResponse<null> {
     const timestamp = Date.now();
 
     // Handle Business Exceptions (custom domain errors)
     if (exception instanceof BusinessException) {
       const exceptionResponse = exception.getResponse() as Record<string, unknown>;
       return {
+        success: false,
         statusCode: exception.getStatus(),
         message: exceptionResponse.message as string,
         error: this.getErrorName(exception.getStatus()),
@@ -73,6 +74,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       if (typeof exceptionResponse === "object" && exceptionResponse !== null) {
         const response = exceptionResponse as Record<string, unknown>;
         return {
+          success: false,
           statusCode: status,
           message: response.message as string | string[],
           error: (response.error as string) || this.getErrorName(status),
@@ -82,6 +84,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
 
       return {
+        success: false,
         statusCode: status,
         message: exception.message,
         error: this.getErrorName(status),
@@ -93,6 +96,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // Handle Mongoose CastError (invalid ObjectId)
     if (exception instanceof MongooseError.CastError) {
       return {
+        success: false,
         statusCode: HttpStatus.BAD_REQUEST,
         message: `Invalid ${exception.kind}: ${exception.value}`,
         error: "Bad Request",
@@ -107,6 +111,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (exception instanceof MongooseError.ValidationError) {
       const messages = Object.values(exception.errors).map((err) => err.message);
       return {
+        success: false,
         statusCode: HttpStatus.BAD_REQUEST,
         message: messages,
         error: "Validation Error",
@@ -121,6 +126,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const field = Object.keys(exception.keyPattern || {})[0] || "field";
       const value = exception.keyValue?.[field] || "unknown";
       return {
+        success: false,
         statusCode: HttpStatus.CONFLICT,
         message: `Duplicate value for ${field}: ${value}`,
         error: "Conflict",
@@ -134,6 +140,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // Unknown error - return 500
     this.logger.error("Unhandled exception", exception);
     return {
+      success: false,
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       message: "Internal server error",
       error: "Internal Server Error",
